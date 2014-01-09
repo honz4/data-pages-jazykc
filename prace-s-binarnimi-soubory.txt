@@ -1,0 +1,84 @@
+====== Práce s binárními soubory ======
+    * [[dox>prace-s-binarnimi-soubory/jednotkove-vektory.c|Jednotkové_vektory]]
+    * [[dox>prace-s-binarnimi-soubory/database-osob.c|Databáze_osob]]
+
+Veškeré níže uvedené funkce je možné použít také s textovými soubory,
+mnohem častěji se však v praxi využívají u souborů binárních.
+======Čtení bloku dat: fread======
+Hlavička funkce [[die.net>3/fread]]
+<code c>
+size_t fread(void *kam, size_t rozmer, size_t pocet, FILE *fr);
+</code>
+kde
+  * //fr// je datový proud, ze kterého se čte,
+  * //rozmer// je velikost jedné čtené položky,
+  * //pocet// udává počet položek a
+  * //kam// je adresa, kam se úspěšně přečtená data uloží. Funkce vrací počet úspěšně přečtených položek.
+Příklad:
+<code c>
+#define VELIKOST_BLOKU 10
+...
+int data[VELIKOST_BLOKU];
+FILE *fr = fopen("in.dat", "rb");
+fread(data, sizeof(int), VELIKOST_BLOKU, fr);
+</code>
+======Zápis bloku dat======
+Hlavička funkce:
+<code c>
+size_t fwrite(void *odkud, size_t size, size_t nmemb, FILE *fw);
+</code>
+kde
+  * //fw// je datový proud, do kterého se zapisuje,
+  * //size// je velikost jedné zapisované položky,
+  * //nmemb// udává počet položek a
+  * //odkud// je adresa, kde jsou zapisovaná data uložena ([[promenna#buffer]]).
+Funkce vrací počet úspěšně zapsaných položek.
+Příklad:
+<code c>
+#define VELIKOST_BLOKU 10
+...
+int data[VELIKOST_BLOKU];
+FILE *fw = fopen("out.dat", "wb");
+...
+fwrite(data, sizeof(int), VELIKOST_BLOKU, fw);
+</code>
+======Posun pozice v souboru======
+V některých situacích je třeba číst (resp. zapisovat) data z (resp. do)
+konkrétního místa souboru. Toto nám jazyk C umožňuje řešit pomocí posouvání
+"ukazatele" na aktuálně zpracovávanou pozici daného souboru.
+Hlavička funkce [[die.net>3/fseek]] pro posun v souboru:
+<code c>
+int fseek(FILE *f, long offset, int odkud);
+</code>
+kde
+  * //f// je daný soubor,
+  * //offset// udává počet bytů (může být i záporné číslo), o kolik se chceme posunout směrem ke konci souboru,
+  * //odkud// udává pozici v souboru, ke které se bude zamýšlený posun vztahovat.
+Parametr odkud může nabývat těchto
+hodnot:
+  * SEEK_SET (pro posun od začátku souboru),
+  * SEEK_CUR (pro posun od aktuální pozice) a
+  * SEEK_END (posun od konce souboru).
+Funkce vrací nulu v případě úspěchu a nenulovou hodnotu, pokud nastala chyba.
+Hlavička funce pro zjištění pozice:
+<code>
+long ftell(FILE *f);
+</code>
+kde f je daný soubor.
+Funkce vrací aktuální pozici odpovídající velikosti posunu od začátku souboru v bytech.
+Příklad:
+<code c>
+/* navrat na puvodni misto */
+akt_pos = ftell(f);
+fseek(f, 0L, SEEK_SET);
+if (hledej(f, "ahoj") == NULL)
+   fseek(f, akt_pos, SEEK_SET);
+</code>
+Pokud v programu zapisujeme a čteme z téhož souboru, je potřeba si uvědomit,
+že z technických důvodů nesmí žádná vstupní operace (např. volání fread)
+následovat přímo po výstupní operaci (např. volání fwrite) a naopak,
+bez předchozího volání funkce fseek.
+Pokud není potřeba měnit pozici v souboru,
+lze pomocí funkce realizovat posun o 0 bytů (např. fseek(f, 0L, SEEK_CUR);).
+----
+cc,upol

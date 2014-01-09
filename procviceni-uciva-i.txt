@@ -1,0 +1,5 @@
+====== Procvičení učiva I ======
+  * [[dox>procviceni-uciva-i/cetnost-znaku.c|Četnost_znaků]]
+  * [[dox>procviceni-uciva-i/mincovka.c|Mincovka]]
+  * [[dox>procviceni-uciva-i/prevody-mezi-ciselnymi-soustavami.c|Převody_mezi_číselnými_soustavami]]
+  * [[dox>procviceni-uciva-i/pocet-vyskytu-retezce-v-retezci.c|Počet_výskytů_řetězce_v_řetězci]]

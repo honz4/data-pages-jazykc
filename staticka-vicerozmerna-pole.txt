@@ -1,0 +1,79 @@
+====== Statická vícerozměrná pole ======
+    * [[dox>staticka-vicerozmerna-pole/maximum-dvojrozmernenho-pole.c|Maximum_dvojrozměrného_pole]]
+    * [[dox>staticka-vicerozmerna-pole/suma-radku-dvojrozmerneho-pole.c|Suma_řádků_dvojrozměrného_pole]]
+
+======Deklarace vícerozměrného pole======
+Bez inicializace (obecně):
+<code>
+typ identifikátor[velikost_1]...[velikost_N];
+</code>
+kde typ je datový typ prvků pole,
+identifikátor je identifikátor proměnné typu pole
+a velikost_1 až velikost_N jsou velikosti pole v jednotlivých rozměrech.
+Příklady:
+<code c>
+int moje_matice[3][4];
+float trojrozmerne[3][4][10];
+</code>
+S inicializací:
+typ id[vel_1]...[vel_N] = { hodnoty_v_blocích };
+kde za rovnítkem nasledují inicializační hodnoty uspořádané v blocích,
+jejíž velikosti odpovídají velikostem jednotlivých rozměrů pole
+od posledního k prvnímu (viz příklad níže).
+Příklady:
+<code c>
+int matice[2][3] = {{1, 2, 3}, {4, 5, 6}};
+
+int m[2][3][4] = {{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}},
+                  {{13, 14, 15, 16}, {17, 18, 19, 20}, {21, 22, 23, 24}}};
+</code>
+======Přístup k prvkům pole======
+K prvkům vícerozměrného pole přisputujeme pomocí několikanásobného užití
+operátoru indexu [].
+Příklad:
+<code c>
+int i, j;
+int a[3][4];
+
+for (i = 0; i < 3; i++)
+   for (j = 0; j < 4; j++)
+      a[i][j] = 1 + j + i * 4;
+
+for (i = 0; i < 3; i++){
+   for (j = 0; j < 4; j++)
+      printf("%i\t", a[i][j]);
+   printf("\n");
+}
+</code>
+======Uložení prvků pole v paměti======
+Prvky pole jsou v paměti ukládany ve stejném pořadí,
+v jakém se uvádějí při inicializaci pole.
+Například u pole int x[2][3] jsou v paměti uloženy v pořadí:
+x[0][0], x[0][1], x[0][2], x[1][0], x[1][1], x[1][2].
+Na n-rozměrné pole se lze
+také dívat jako na jednorozměrné pole, jehož prvky jsou (n-1)-rozměrná pole.
+Výše uvedené dvourozměrné pole x tedy může být chápáno jako jednorozměrné pole
+typu int [3] o velikosti 2.
+======Vztah polí a ukazatelů======
+Podobně jako u polí jednorozměrných, i zde existuje vztah mezi poli a ukazateli.
+V našem příkladu je x adresa dvourozměrného pole (proměnná typu int
+[2][3] nebo téměř ekvivalentně int (*)[3]), x[0] je adresa prvního řádku a x[1]
+je adresa druhého řádku (oba typ int [3] nebo int *).
+======Vícerozměrné pole jako parametr funkce======
+Také vícerozměrné pole může být parametrem funkce.
+V tomto případě definujeme (podobně jako u polí jednorozměrných) formální parametr bez udání prvního rozměru,
+všechny následující rozměry musí být uvedeny.
+Ekvivalentně můžeme formální parametr dané funkce definovat jako ukazatel odpovídajícího typu.
+Příklady:
+<code c>
+int maxim(int cisla[][3], int radku) {...}
+...
+int cisla[2][3] = {{1, 45, 21}, {5, 7, 2}};
+max = maxim(cisla, 2);
+int maxim(int (*cisla)[3], int radku){...}
+...
+int cisla[2][3] = {{1, 45, 21}, {5, 7, 2}};
+max = maxim(cisla, 2);
+</code>
+----
+cc, upol

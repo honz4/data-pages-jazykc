@@ -1,0 +1,48 @@
+====== Dynamická práce s pamětí ======
+    * [[dox>dynamicka-prace-s-pameti/dynamicky-zasobnik.c|Dynamický_zásobník]]
+    * [[dox>dynamicka-prace-s-pameti/spojeni-textovych-retezcu.c|Spojení_textových_řetězců]]
+
+======Přetypování ukazatelů======
+Přestože jsou ukazatele při deklaraci vztaženy ke konkrétnímu datovému typu,
+umožňuje jazyk C definovat také ukazatel (ukazatel na typ void),
+který není vázán ke konkrétnímu typu.
+
+S takovým ukazatele pak lze některé operace provádět pouze při uvedení explicitní konverze.
+V praxi se tyto ukazatele používají převážně při deklaracích a definicích funkcí,
+které pracují s daty libovolných typů.
+Příklad:
+<code c>
+void *moje_pamet;
+((int *)moje_pamet)++;
+</code>
+======Funkce pro práci s pamětí======
+Všechny níže uvedené funkce jsou definovány v knihovně [[:c:stdlib.h]].
+Při výpočtu velikosti bloku se v praxi hojně využívá operátor [[:c:sizeof]].
+Pokud není možné paměť alokovat, vrací níže uvedené funkce hodnotu NULL (ukazatel na nulovou adresu).
+
+=====malloc=====
+void *malloc(size_t size);\\
+Funkce alokuje paměť velikosti size a vrátí ukazatel na danou oblast paměti.
+
+=====calloc=====
+void *calloc(size_t items, size_t size);\\
+Funkce alokuje paměť pro //items// prvků o velikosti //size// (tedy items*size bytů),
+navíc tuto paměť vyplní nulami.
+
+=====realloc=====
+void *realloc(void* old, size_t size);\\
+Funkce zajišťující změnu velikosti dříve alokovaného bloku paměti //old// na
+velikost //size//. Data původního bloku paměti budou zkopírována do nově
+alokovaného.
+
+=====free=====
+void free(void* block);\\
+Funkce pro uvolnění paměti //block//.
+Používá se vždy, když víme, že už danou paměť nebudeme v programu používat.
+
+======Praxe======
+  * neuvolňování paměti vzniká tzv. //memleak//
+  * kontrola: statická splint, runtime: valgrind
+  * defacto sem patří i [[:c:string.h#strdup]]
+----
+cc,upol

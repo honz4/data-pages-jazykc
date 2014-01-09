@@ -1,0 +1,179 @@
+====== Práce s preprocesorem ======
+    * [[dox>prace-s-preprocesorem/cislice-dane-soustavy.c|Číslice_dané_soustavy]]
+    * [[dox>prace-s-preprocesorem/nacteni-cisla-typu-int.c|Načtení_čísla_typu_int]]
+Preprocesor zpracováná zdrojový text programu před použitím překladače.
+Nekontroluje syntaktickou správnost programu pouze provádí záměnu textů (např.
+symbolické jméno konstanty za její hodnotu). Řádky určené pro zpracování
+preprocessorem začínají znakem "%%#%%", za kterým by neměla být mezera.
+======Operátory======
+  * defined
+  * #
+  * ##
+  * _Pragma
+======Instrukce======
+  * #bílé znaky
+  * #include <file.h>
+  * #include "file.h"
+  * #if //vyraz//
+  * #elif //vyraz//
+  * #else
+  * #endif
+  * #ifdef  MAKRO   totéž do #if  defined MAKRO
+  * #ifndef MAKRO   totéž co #if !defined MAKRO
+  * #error
+  * #pragma
+  * #file "filename"
+  * #line number
+  * 
+Ve //vyraz// lze použít
+  * celočíselnou aritmentiku,
+  * operátory defined, &&, ||, +, -, ( závorkování ) pro precedenci,
+  * hodnoty už definovaných maker, předdefinovaných maker
+======Makra bez parametru (konstanty)======
+Definice konstanty obecně: %%#%%**define** //jméno// //hodnota//
+Příklady:
+<code c>
+#define PI 3.14
+#define AND &&
+#define ERROR printf("Chyba v programu!");
+</code>
+Při zpracování preprocesorem je každý výskyt jména konstanty v následujícím
+textu zdrojového souboru nahrazen hodnotou této konstanty.
+Vyjímku tvoří výskyty jmen konstant uzavřené v uvozovkách, které se nenahrazují (např. printf
+("Logická spojka AND...");).
+Pokud je nutné změnit hodnotu konstanty je nutné ji nejprve zrušit a poté znova
+definovat.
+Příklad:
+<code c>
+#undef PI
+#define PI 3.1416
+/*lépe:*/
+#ifdef PI
+#undef PI
+#define PI 3.1416
+#endif
+/*Poznámka: Ludolfovo číslo jako double/float literál je #define-ováno v <limits.h> */
+</code>
+Pokud je potřeba definici konstatny zapsat na více než jeden řádek,
+zapíšeme na konci řádku znak "\", který preprocesor z hodnoty konstanty vynechá
+a pokračuje ve zpracovávání hodnoty na následujícím řádku.
+Příklad:
+<code c>
+#define DLOUHA_KONSTANTA 12345678.12345\
+67890123456
+</code>
+Pozn.: pokračovacích řádků se spíše používá při #define makro(s,parametry) přdstavujících několik řádků kódu!
+======Makra s parametry======
+Pokud v programu často používáme funkci, která je tvořena velmi malým počtem
+příkazů, bývá výpočet značně neefektivní, protože "administrativa" spojená s
+voláním funkce je výpočetně náročnější než samotné provedení příkazů v těle funkce.
+Poznámka: toto lze řešit pomocí [[:c:inline]]
+
+Místo klasické funkce lze použít makro s parametry, které nevytváří
+žádnou "administrativu" za běhu programu.
+Nevýhodou maker je naopak vznik delšího (většího) programu a nemožnost použití rekurze.
+
+Definice makra obecně: **#define //jméno//(//arg_1//, ..., //arg_N//) //tělo_makra//**\\
+kde //arg_1// až //arg_N// jsou argumenty makra, které se chovají podobně jako
+parametry u funkcí. Upozorňujeme, že mezi jménem makra a závorkou nesmí být mezera.  Příklad:
+<code c>
+#define na2(x) ((x)*(x))
+</code>
+Vzhledem k tomu, že při expanzi maker dochází pouze k nahrazení jednoho textu
+jiným, je doporučováno uzavřít celé tělo makra a také každý výskyt argumentu v těle makra do závorek.
+Příklady možných chyb:
+<code c>
+#define na2(x) x*x
+...
+v = na2(f-g); /* prepise se  na v = f-g*f-g; */
+#define cti(c) c=getchar()
+...
+if (cti(c)=='A'){... /* prepise se na if (c=getchar()=='A'){... */
+</code>
+======Podmíněný překlad======
+Podmíněný překlad (dále PP) používáme pro dočasné vynechání části zdrojového kódu při kompilaci.
+Typicky se PP používá pro
+  * vynechání ladících částí programu po jeho odladění,
+  * překlad platformově závislých části zdrojového kódu
+  * či dočasné odstranění (zakomentování) větší části kódu.
+PP řízený konstantním výrazem
+Syntaxe obecně:
+  #if konstantní_výraz
+     část_1
+  #else
+     část_2
+  #endif
+</code>
+Pokud je hodnota výrazu konstantní_výraz nenulová, překládá se //část_1//, jinak se
+překládá //část_2//. Části %%#%%else a část_2 lze vynechat.
+Příklad:
+<code c>
+#define WINDOWS 1
+...
+#if WINDOWS
+   #define JMENO "C:\\Data\\input.txt"
+#else
+   #define JMENO "/data/input.txt"
+#endif
+</code>
+PP řízený definicí makra
+Syntaxe obecně:
+  #ifdef jméno_makra
+     část_1
+  #else
+     část_2
+  #endif
+Pokud je makro jméno_makra definováno, překládá se část_1, jinak se překládá
+část_2. Opět platí, že části #else a část_2 lze vynechat.
+Příklad:
+<code c>
+#define WINDOWS
+#ifdef WINDOWS
+   #define JMENO "C:\\Data\\input.txt"
+#else
+   #define JMENO "/data/input.txt"
+#endif
+</code>
+K dispozici je také direktiva #ifndef, která provádí opak výše zmíněné direktivy
+ifdef.
+Syntaxe obecně:
+  #ifndef jméno_makra
+     část_1
+  #else
+     část_2
+  #endif
+Pokud je makro jméno_makra definováno, překládá se část_2, jinak se překládá
+část_1. I zde platí, že části #else a část_2 lze vynechat.
+Příklad:
+<code c>
+#ifndef WINDOWS
+   #define JMENO "/data/input.txt"
+#else
+   #define JMENO "C:\\Data\\input.txt"
+#endif
+</code>
+======Další možnosti PP======
+Direktivy ifdef a ifndef testují pouze existenci jediného makra, pro konsturkci
+složitějších podmínek lze použít operátor **defined()** a logické operátory.
+Preprocesor také umožňuje složitější větvení PP pomocí direktivy **#elif**,
+která má podobný význam jako else if v podmínkovém příkazu.
+Pro úplnost dodáváme, že direktiva **#error** slouží pro výpis chyb (a ukončení překladu!) již při zpracovaní preprocesorem.
+Příklad:
+<code c>
+#if defined(WINDOWS) && defined(DEBUG)
+   #define LADENI 1
+#elif !defined(DEBUG)
+   #error Chyba nelze debugovat!
+#else
+   #define LADENI 2
+#endif
+</code>
+======Praxe======
+  * zajímavé je <assert.h>
+  * guard pro každý #include soubor!
+  * #ifdef %%__cplusplus%% pro používá C v C++
+  * #define/#undef pomocí -DMAKRO=vyraz a -UMAKRO
+  * prededefinovaná makra: %%__FILE__ __LINE__%% ...
+  * generika viz sglib, uthash tree.h z BSD, piumarta
+
+cc,upol

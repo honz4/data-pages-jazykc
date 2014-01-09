@@ -1,0 +1,62 @@
+
+====== Dynamická vícerozměrná pole ======
+    * [[dox>dynamicka-vicerozmerna-pole/soucina-matic.c|Součin_matic]]
+    * [[dox>dynamicka-vicerozmerna-pole/cetnost-znaku-v-poli-retezcu.c|Četnost_znaku_v_poli_řetězců]]
+
+Níže jsou uvedeny příklady všech možností vytvoření dynamického dvourozměrného pole.
+Pro vytvoření dynamických polí s více než dvěma rozměry lze použít stejných principů.
+Pro všechny níže uvedené možnosti platí, že přístup k prvkům pole je stejný jako u statického pole.
+Varianty pole se liší pouze svým tvarem (stejně vs. různě dlouhé řádky),
+vnitřním uspořádáním prvků v paměti a tím, které rozměry
+je možné určit až v průběhu výpočtu (a který je naopak nutné zadat celočíselnou
+konstantou již při psaní programu).
+======Dvourozměrné pole jako pole ukazatelů======
+Jedná se o typ pole s různě dlouhými řádky.
+Počet řádků je nutné určit pevně konstantou,
+naopak velikosti řádků lze specifikovat až v průběhu výpočtu.
+Jednotlivé řádky nejsou v paměti uloženy za sebou v jednom bloku.
+Tento typ pole se v praxi používá relativně často (např. pole textových řetězců).
+Příklad vytvoření pole:
+<code c>
+int *pole[2];
+pole[0]=(int *)malloc(3 * sizeof(int));
+pole[1]=(int *)malloc(3 * sizeof(int));
+</code>
+======Dvourozměrné pole jako ukazatel na pole======
+Jde o méně používaný typ pole.
+Druhý rozměr je dán pevně, první je možné určit až v průběhu výpočtu.
+Jednotlivé řádky mají stejnou délku a jsou uloženy v jednom bloku paměti za sebou (stejně jako u statického pole).
+Příklad:
+<code c>
+int (*pole)[3];
+pole = (int(*)[3])malloc(2 * 3 * sizeof(int));
+</code>
+======Dvourozměrné pole jako ukazatel na ukazatel======
+Oba rozměry pole je možné určit až v průběhu výpočtu. Řádky mohou mít různou
+délku a jsou obecně uloženy v různých blocích paměti.
+Příklad:
+<code c>
+int **poleD;
+poleD = (int **)malloc(2 * sizeof(int *));
+poleD[0] = (int *)malloc(3 * sizeof(int));
+poleD[1] = (int *)malloc(3 * sizeof(int));
+</code>
+======Pole textových řetězců======
+Toto dvourozměrné pole se používá často v programech, které pracují s textem.
+Jde o pole typu "pole ukazatelů" nebo "ukazatel na ukazatel". Pokud použijeme
+jen jeden operátor indexu, můžeme pohodlně pracovat s celým textovým řetězcem
+na daném řádku.
+Příklad:
+<code c>
+char *p_text[4];
+
+p_text[0] = "prvni";
+p_text[1] = "druhy";
+p_text[2] =(char *)malloc(6 * sizeof(char));
+strcpy(p_text[2], "treti");
+p_text[3] = "ctvrty";
+
+printf("%s\n", p_text[1]);
+</code>
+----
+odkaz cc, upol/sujc

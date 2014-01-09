@@ -1,0 +1,98 @@
+====== Ukazatele na funkce ======
+  * [[dox>ukazatele-na-funkce/mapovani-funkce.c|Mapování_funkce]]
+  * [[dox>ukazatele-na-funkce/mapovani-pole-funkci.c|Mapování_pole_funkcí]]
+  * [[dox>ukazatele-na-funkce/akumulator.c|Akumulátor]]
+  * FIXME než "umělé" příklady udělat příklady na [[die.net>3/qsort]], [[die.net>3/bsearch]]
+    * [[dox>ukazatele-na-funkce/stdlib-qsort.c|stdlib.h qsort()]] [[die.net>3/qsort]]
+  * vysvětlit termím //callack// !!!
+  * příklad na expat!
+  * možná taky compare callback, dispoze callback, userdata/clientData,
+  * "methoda" -- funkční pointer jako //member// struktury
+
+=====Deklarace ukazatele na funkci=====
+V jazyku C je při deklaraci proměnné typu ukazatel na funkci nutné vždy
+specifikovat také počet a typy parametrů funkce a typ návratové hodnoty.
+Příklad <del>deklarace</del>definice:
+<code c>
+//     v------v----------- priotita!
+double (*p_fdd)(double);
+//             ^------^--- typ
+</code>
+FIXME: odkaz na to, jak se čtou deklarátory/typy!!!
+
+Uvědomte si: ( závorky ) představují 4 různé operátory:
+  * typ (v deklaraci/definici/přetypování)
+  * operátor provedení/zavolání funkce
+  * [[:c:cast|přetypování]] //cast//
+  * změna priorit, např. a = (3 + 4) * 5;
+
+Proměnná p_fdd je ukazatel na funkci s jedním paramaterm typu double vracející
+hodnotu typu double.
+Příklad <del>deklarace</del>definice s inicializací:
+<code c>
+double polynomA(double x){
+   return 3 * x * x + 4 * x - 10;
+}
+
+double (*p_fdd)(double) = polynomA;
+</code>
+Příklad deklarace pomocí typedef:
+<code c>
+typedef double (*P_FDD)(double);
+
+P_FDD p_fdd = polynomA;
+</code>
+=====Práce s ukazatelem na funkci=====
+Příklad přiřazení adresy funkce ukazateli:
+<code c>
+p_fdd = polynomA;
+</code>
+Příklady volání funkce pomocí ukazatele:
+<code c>
+v = (*p_f)(-1);
+v = p_f(-1);
+</code>
+Obě výše uvedené možnosti volání funkce pomocí ukazatele na tuto funkci se
+nijak neliší, v praxi se používá druhá varianta, která je jednodušší.
+=====Ukazatel na funkci jako parametr funkce=====
+Ukazatele na funkce umožňují vytváření funkcí vyšších řádů, jejichž výpočet je
+možné za běhu programu modifikovat pomocí funkcí,
+které jim jsou předány při jejich volání jako parametr.
+Příklad definice:
+<code c>
+double *map(double (*fce)(double), double *vstup, int pocet) {...}
+</code>
+Příklad volání funkce:
+<code c>
+double na3(double x){
+   return x * x * x;
+}
+...
+pole_vysledku = map(na3, pole_vstupni, velikost_vstupni);
+//Příklad použití ukazatele na funkci při volání:
+double (*p_na3)(double) = na3;
+...
+pole_vysledku = map(p_na3, pole_vstupni, velikost_vstupni);
+</code>
+=====Pole ukazatelů na funkce=====
+Stejně jako u všech dříve zmíněných datových typů, je i z ukazatelů na funkce
+(se stejným počtem a typy parametrů a stejným typem návratové hodnoty) možné
+vytvářet pole (i vícerozměrná).
+Příklad deklarace pole ukazatelů na funkce:
+<code c>
+double(*pole_fci[5])(double);
+</code>
+Příklad deklarace s inicializací:
+<code c>
+double(*pole_fci[])(double) = {na3, na4, sin, cos, tan};
+</code>
+Příklad deklarace s použitím dříve definovaného typu:
+<code c>
+P_FDD pole_fci[] = {na3, na4, sin, cos, tan};
+</code>
+Příklad volání funkce z pole:
+<code c>
+vysledek = pole_fci[1](-1);
+</code>
+----
+cc,upol

@@ -1,0 +1,87 @@
+====== Funkce ======
+    * [[dox>funkce/suma-pole.c|Suma_pole]]
+    * [[dox>funkce/prevody-cisel-do-desitkove-soustavy.c|Převody_čísel_do_desitkové_soustavy]]
+Doplňující informace:
+Funkce jsou osamostatněné části programu, které "komunikují" s ostatními
+funkcemi prostřednictvím volání funkcí.
+
+Slouží tedy ke strukturování programu, viz také funkce versus kompilační jednotka, viz knihovna
+
+Další termíny používané v tomto smyslu (nebo jiných prostředích):
+podprogram, sub/rutina, procedura.  
+Termínem procedura je někdy označuje funkce, která nic nevrací: **void proc(...)**,
+tj. její "funkčnost" spočívá v [[:c:sideefect|bočním efektu]].
+
+Volání funkce vede k provedení jejího těla (posloupnosti příkazů).
+
+Vstupem funkce jsou její parametry, výstupem pak návratová hodnota funkce.
+Pro úplnost dodáme, že také [[:c:main|int main()]] je funkce (tzv. hlavní funkce programu).
+======Deklarace funkce=====
+Jedná se o specifikaci identifikátoru funkce, typů parametrů a návratové hodnoty dané funkce.
+Tyto informace potřebuje překladač k ověření, zda je daná funkce v následujícím kódu volána korektně.
+Deklarace funkcí bývá zvykem psát
+před definice funkcí (viz níže) v daném souboru. BLBOST!!! viz [[:c:header-file]]
+Syntaxe:
+<code c>
+typ_navrat id_fce(typ_1, ..., typ_N);
+</code>
+kde
+  * //typ_navrat// je datový typ odpovídající návratové hodnotě,
+  * //typ_1// až //typ_N// jsou datové typy odpovídající typům parametrů
+  * a //id_fce// je identifikátor funkce (jméno funkce).
+Příklady:
+<code c>
+double sqrt(double); /* deklarace funkce pro výpočet druhé odpocniny v math.h */
+size_t strlen(const char *); /* deklarace funkce pro výpočet délky řetězce v string.h */
+int moje_fce(int, char []); /* deklarace vlastní funkce s parametry typu int a pole typu char */
+</code>
+Typově //id_fce// představuje ukazatel/pointer (tj. addresu), viz [[ukazatele-na-funkce]],
+tj. není to //lvalue// a je zbytečné používat **&** operátor, resp. lze, ale "nic se nestane".
+Note: podobně jako identifikátor [[:c:array|pole]] **typ pole[]** je ukazatel/pointer na typ, tj. adresa!
+<code c>
+#include <stdio.h>
+int main(void){
+  printf("Hodnota  main=%p\n",  main);
+  printf("Hodnota &main=%p\n", &main); //hodnota main()? hmm, rekurze na main()? drsne
+  return 0;
+}
+</code>
+
+======Definice funkce======
+K údajům požadovaným při deklaraci jsou navíc přidány identifikátory formálních
+parametrů a tělo funkce (příkazy).
+
+Uvnitř těla funkce přistupujeme k parametrům jako k proměnným
+s identifikátorem odpovídajícím identifikátoru formálního parametru.
+
+Ukončení provádění funkce a nastavení návratové hodnoty provedeme příkazem return,
+který se může nacházet na libovolném místě v těle funkce.
+Syntaxe:
+<code c>
+typ_navrat id_fce(typ_1 id_1, ..., typ_N název_N) {
+  příkazy těla funkce;
+  ...
+  return x;
+}
+</code>
+Příklad:
+<code c>
+unsigned int delka(char str[]){
+   unsigned int index = 0;
+   while (str[index] != '\0') index++;
+   return index;
+}
+</code>
+======Volání funkce======
+Volání funkce provedeme pomocí [[operatory|operátoru volání funkce ()]] uvedeným za
+identifikátorem dané funkce, přičemž uvnitř závorek uvedeme skutečné parametry
+volání funkce oddělené čárkou.
+Volání funkce se může nacházet uvnitř složitějšího výrazu,
+je tak možné dále (ihned, bez uložení do proměnné) využít návratovou hodnotu volané funkce.
+Příklady:
+<code c>
+int d = delka("Ahoj!");
+printf("%i\n", delka("Ahoj!"));
+</code>
+----
+cc,upol

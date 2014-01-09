@@ -1,0 +1,86 @@
+====== Funkce s proměnným počtem parametrů ======
+    * [[dox>funkce-s-promennym-poctem-parametru/prumer-cisel.c|Průměr_čísel]]
+    * [[dox>funkce-s-promennym-poctem-parametru/suma-komplexnich-cisel.c|Suma_komplexních_čísel]]
+Princip funkcí s proměnným počtem parametrů (dále FPPP) je založen na skutečnosti,
+že při každém volání funkce jsou hodnoty skutečných parametrů
+kopírovány na zásobník (paměť používaná pro uložení lokálních proměných a parametrů funkcí).
+Pokud tedy známe adresu a typ (velikost paměti potřebnou k jeho uložení) některého parametru,
+můžeme přistoupit také k následujícímu parametru.
+FPPP tedy:
+  * musí mít vždy alespoň jeden pevný parametr a
+  * musí být určeno, kolik parametrů v paměti následuje (je znám počet nebo je použita nějaká zarážka)
+  * a jaké jsou datové typy těchto parametrů.
+Typické příklady FPPP
+  * funkce, u níž počet parametrů a jejich typy jsou dány předaným formátovacím textovým řetězcem (např. printf)
+  * funkce, u kterých se předpokládá se určitý typ parametrů a předá se jejich počet (např. suma, průměr čísel)
+  * funkce, u kterých se předpokládá určitý typ parametrů a konec seznamu parametrů je označen zarážkou - domluvenou hodnotou (např. spojení textových řetězců)
+======Deklarace FPPP======
+Při deklaraci (definici) FPPP se používá tzv. výpustka (...), která následuje
+po povinných parametrech funkce.
+Příklady deklarace funkce:
+<code c>
+double prumer(int pocet, double prvni, ...);
+int print(char* format, ...);
+</code>
+======Volání FPPP======
+Příklad volání funkce:
+<code c>
+double prum;
+
+prum = prumer(5, 1.2, 2.3, 4.3, 2.5, 7.1);
+print("Průměr je %g. \n", prum);
+</code>
+======Zpracování parametrů v těle funkce======
+Díky makrům z knihovny [[c:stdarg.h]] nemusíme znát přesnou strukturu zásobníku
+(je implementačně závislá) a práce s FPPP je tak relativně jednoduchá.
+V ''stdarg.h'' je definován typ **va_list**, který používáme pro uložení adresy parametrů v
+zásobníku, a 3 makra va_start(), va_arg() a va_end().
+
+Při psaní těla FPPP je nejprve nutné deklarovat si alespoň jednu proměnnou typu
+va_list a tuto proměnnou nastavit na první z "volitelných" parametrů pomocí
+makra va_start(), jehož argumenty by měly být identifikátor nastavované
+proměnné typu va_list a identifikátor posledního "pevného" parametru.
+Příklad:
+<code c>
+va_list parametry;
+va_start(parametry, posledni_pevny);
+</code>
+Jednotlivé parametry pak získáváme prostřednictvím makra va_arg(),
+jehož argumenty jsou ukazatel na zásobník a očekávaný datový typ dalšího parametru.
+Vyhodnocení makra va_arg() má za následek také posunutí ukazatele na zásobník.
+Příklad:
+<code c>
+cislo = va_arg(parametry, double);
+</code>
+Pokud jsme získali všechny "volitelné" parametry, je potřeba ukončit práci s
+ukazatelem na zásobník pomocí makra va_end().
+Příklad:
+<code c>
+va_end(parametry);
+</code>
+Příklad FPPP
+<code c>
+double prumer(int pocet, double prvni, ...){
+   double out;
+   va_list param;
+   int i;
+
+   out = prvni;
+   va_start(param, prvni);
+
+   i = pocet - 1;
+   while (i > 0) {
+      out += va_arg(param, double);
+      i--;
+   }
+
+   va_end(param);
+   out = out / pocet;
+
+   return out;
+}
+</code>
+======Praxe======
+  * c99 potřebuje ještě **va_copy()** ??? viz [[die.net>3/stdarg]]
+----
+cc,upol

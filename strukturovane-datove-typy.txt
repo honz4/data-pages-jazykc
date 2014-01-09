@@ -1,0 +1,142 @@
+====== Strukturované datové typy ======
+    * [[dox>strukturovane-datove-typy/studenti.c|Studenti]]
+    * [[dox>strukturovane-datove-typy/soucet-zlomku.c|Součet_zlomků]]
+    * [[dox>strukturovane-datove-typy/strukt.c|Pokusy/demo struktur, unionů]]
+======Odvozené datové typy======
+V jazyku C je možné definovat si vlastní datové typy.
+K tomuto účelu používáme konstukci [[:c:typedef]].
+Syntaxe (obecně):
+  typedef zápis_ve_tvaru_deklarace;
+Příklady definice typu:
+<code c>
+typedef int cele_cislo; /* přejmenování typu; nepoužívá se */
+typedef int male_pole[10]; /* vytvoření typu pro pole 10 prvků typu int */
+typedef unsigned long ULong; /* přejmenování typu za účelem zkrácení zápisu; používá se zřídka */
+typedef const ULong CULong; /* v definici typu je možné využít všechny dříve definované typy */
+</code>
+<del>Deklarace</del>Definice proměnné odvozeného typu:
+<code>
+male_pole moje_cisla;
+ULong velke_cislo;
+</code>
+======Výčtový datový typ======
+Výčtový datový typ se používá se pro definici většího počtu spolu souvisejících
+celočíselných konstant. K vytváření výčtových typů používáme konstrukci [[:c:enum]].
+Syntaxe:
+  enum identifikátor_typu{
+  id_clenu_1 = konst_výraz_1,
+  ...
+  id_clenu_N = konst_výraz_N
+  } id_prom_1 = hodnota_1, ... , id_prom_M = hodnota_M;
+
+kde //identifikátor_typu// je identifikátor nově vytvářeného výčtového typu,
+//id_clenu_1// až //id_clenu_N// jsou identifikátory vytvářených konstant,
+//konst_výraz_1// až //konst_výraz_N// hodnoty vytvářených konstant.
+
+Pokud není hodnota konstanty v definici typu specifikována, je nastavena na hodnotu předchozí
+konstatny zvětšenou o 1 (na hodnotu 0 v případě první konstanty v definici).
+
+Součástí definice výčtového typu může být také deklarace libovolného množství
+proměnných tohoto typu //id_prom_1// až //id_prom_M// a jejich případná inicializace
+hodnotami //hodnota_1// až //hodnota_M//.
+
+Příklady definice výčtového typu:
+<code c>
+enum Bool{TRUE = 1, FALSE = 0 }; /* pouze definice typu */
+enum Bool{TRUE = 1, FALSE = 0 } splnen=TRUE; /* definice typu s definicí a inicializací proměnné */
+enum {FALSE, TRUE} splnen = 1; /* definice bezejmenného typu s využitím implicitních hodnot konstant */
+enum Den{Po,Ut,St,Ct,Pa,So=10,Ne} muj_den; /* kombinace implicitních a explicitně zadaných hodnot */
+</code>
+Příklady <del>deklarace</del>definice proměnných výčtového typu:
+<code c>
+enum Bool splneno; /* definice bez inicializace */
+enum Bool splneno = 0; /* inicializace číselnou hodnotou */
+enum Den muj_den = Po; /* inicializace identifikátorem konstanty */
+</code>
+Příklady použití výčtového typu:
+<code c>
+splneno = TRUE; /* využití symbolického jména */
+muj_den = 3; /* využití číselné hodnoty */
+cislo = muj_den * So + splneno; /* s konstantami lze provádět jakékoli operace */
+</code>
+======Výčtový typ pomocí typedef======
+Jedná se o nejpřehlednější a v praxi nejpoužívanější způsob definice výčtových typů.
+Typ se nepojmenovává v konstrukci **enum**, ale až v konstrukci **typedef**. viz [[:c:namespace]]
+Příklady definice typu:
+<code c>
+typedef enum{TRUE = 1, FALSE = 0} Bool;
+typedef enum{Po,Ut,St,Ct,Pa,So=10,Ne} Den;
+</code>
+Příklady deklarace proměnných výčtového typu:
+<code c>
+Bool splneno;
+Bool splneno = 0;
+Den muj_den = Po;
+</code>
+======Strukturovaný datový typ======
+Strukturovaný datový typ se používá se pro uložení více spolu souvisejících
+prvků, které mohou být různého typu (na rozdíl od pole).
+K vytváření struktur používáme konstrukci [[:c:struct]].
+Syntaxe:
+  struct identifikátor_typu{
+  typ_clenu_1 id_clenu_1;
+  ...
+  typ_clenu_N id_clenu_N;
+  } id_prom_1 = {inic_1}, ..., id_prom_M = {inic_M};
+kde
+  * //identifikátor_typu// je identifikátor nově vytvářeného strukturovaného typu,
+  * //typ_clenu_1// až //typ_clenu_N// jsou datové typy členů struktury a
+  * //id_clenu_1// až //id_clenu_N// jsou identifikátory členů struktury.
+Člen struktury může být libovolného typu,
+pouze ne stejného typu jako právě definovaná struktura (lze obejít užitím ukazatelů).
+
+Součástí definice strukturovaného typu může být také
+<del>deklarace</del>definice libovolného množství proměnných tohoto typu //id_prom_1// až //id_prom_M//
+a jejich případná inicializace výrazy //inic_1// až //inic_M// (podobně jako inicializace polí).
+
+Příklady definic strukturovaného typu:
+<code c>
+struct Datum{char Den, Mesic; short Rok;}; /* pouze definice typu, h0nza: ne! struct tag! */
+struct Datum{char Den, Mesic; short Rok;} narozen = {24, 3, 1972}; /* definice typu i proměnné s inicializací */
+struct {char Den, Mesic; short Rok;} narozen = {24, 3, 1972}; /* definice typu beze jména */
+</code>
+Příklady deklarací proměnných strukturovaného typu:
+<code c>
+struct Datum narozen; /* definice bez inicializace */
+struct Datum narozen = {24, 3, 1972}; /* definice s inicializací */
+</code>
+======Struktura pomocí typedef======
+Jedná se o nejpřehlednější a v praxi nejpoužívanější způsob definice struktur.
+Typ se nepojmenovává v konstrukci struct, ale až v konstrukci typedef.
+Příklad definice typu:
+<code c>
+typedef struct {
+   char Den, Mesic; short Rok;
+} Datum;
+</code>
+Příklady <del>deklarace</del>definice proměnných strukturovaného typu:
+<code c>
+Datum narozen;
+Datum narozen = {24, 3, 1972};
+</code>
+======Přístup ke členům struktury======
+K jednotlivým členům struktury přistupujeme pomocí operátoru tečka,
+před kterým je uveden identifikátor proměnné strukturovaného typu
+a za ním identifikátor členu struktury, ke kterému přistupujeme.
+Příklady:
+<code c>
+Datum muj_den, narozen, dnes;
+int vek;
+
+muj_den.Den = 24;
+muj_den.Mesic = (muj_den.Mesic + 3) % 12;
+vek = dnes.Rok - narozen.Rok;
+</code>
+======Další======
+  * ukazatel na strukturu
+  * struktura jako parametr funkce
+  * funkce vracející strukturu
+  * struktura struktur
+  * padding, offsetof() makro
+  * union
+  * bitfield

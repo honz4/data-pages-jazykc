@@ -1,0 +1,54 @@
+====== Celková koncepce programu ======
+    * [[dox>celkova-koncepce-programu/objemy-a-povrchy.c|Objemy_a_povrchy]]
+    * [[dox>celkova-koncepce-programu/ascii-art.c|ASCII_Art]]
+
+======Parametry a návratová hodnota funkce main======
+Funkce main může mít žádný nebo dva formální parametry.
+
+Tyto [[argc-argv|parametry]] jsou většinou označovány argc (parametr typu int) a argv (typu pole textových řetězců).
+Definice hlavní funkce má tedy obvykle tvar
+<code c>
+int main(int argc, char* argv[]){
+  ...
+  return EXIT_SUCCESS;//==0
+}
+</code>
+<code c>
+int main(void) {
+  return EXIT_FAILURE;// !=0
+}
+</code>
+Podobně jako jiné funkce má i **main** svou návratovou hodnotu (typu int),
+kterou může [[die.net>3/exit|zpracovávat program]] (většinou OS),
+který náš program spustil (a tím jakoby volal naši hlavní funkci).
+======Předání parametrů funkci main======
+Parametry je možné hlavní funkci předat při spuštění programu z příkazové řádky
+(terminálu apod.) tím, že je napíšeme za název spustitelného souboru oddělené mezerami.
+Do parametru argc se uloží počet textových řetězců a do pole argv pak
+jednotlivé textové řetězce. Zde je nutné si uvedomit, že argv[0] je textový
+řetězec odpovídající spouštěnému programu (např. "xpm2eps.exe"),
+vlastní parametry tedy následují až na dalších indexech v poli.
+  * hodnota //argc// odpovídá počtů textových řetězců v poli //argv//.
+  * argv[argc] obsahuje NULL
+Příklad:
+<code c>
+./xpm2eps -f *.xpm -o *.eps -by 10 (GNU/Linux)
+xpm2eps.exe -f *.xpm -o *.eps -by 10 (MS Windows)
+</code>
+Pro konverzi textových řetězců na čísla lze použít funkce [[die.net>3/atoi]] a [[die.net>3/atof]]
+definované v knihovně [[:c:stdlib.h]].
+Příklad:
+<code c>
+int pocet;
+double cislo;
+...
+pocet = atoi(argv[1]);
+cislo = atof(argv[2]);
+</code>
+======Praxe======
+h0nza: pro mne celková koncepce představuje toto:
+  * rozdělení programu na moduly
+  * monolitický program nebo knihovna/y + main modul/y
+  * privatní a public .h soubory
+----
+cc, upol

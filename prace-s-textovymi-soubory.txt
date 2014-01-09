@@ -1,0 +1,98 @@
+====== Práce s textovými soubory ======
+    * [[dox>prace-s-textovymi-soubory/soucty-radku.c|Součty_řádků]]
+    * [[dox>prace-s-textovymi-soubory/soucty-zlomku.c|Součty_zlomků]]
+===== Doplňující informace =====
+Veškeré funkce, konstanty a struktury používané při práci se soubory jsou
+definovány ve standardní knihovně [[:c:stdio.h]].
+======Otevření souboru======
+Pro práci se soubory jsou používány ukazatale na strukturu FILE, čili jakési
+"ukazatele na soubor" (obecněji ukazatele na datový proud, anglicky stream).
+Než začneme se souborem pracovat (číst či zapisovat data) je nutné soubor
+otevřít pomocí funkce [[die.net>3/fopen]].
+
+Deklarace funkce: FILE *fopen(char* filename, char* mode);
+
+kde filename je textový řetězec obsahující jméno souboru (pokud se soubor
+nachází v jiném adresáři, je nutné specifikovat také cestu k tomuto souboru,
+relativní nebo absolutní) a textový řetězec mode pak specifikuje způsob
+otevření souboru.
+
+Řetězec mode může nabývat následujících hodnot:
+  * "r" kde znak "r" odpovídá otevření pro čtení,
+  * "w" "w" otevření pro zápis,
+  * "a" "a" otevření pro zápis na konec již existujícího souboru,
+  * "r+" a znak "+" specifikuje režimy,
+  * "w+"
+  * "a+"
+  * "rt"
+  * "wt"
+  * "at"
+  * "r+t" "t" otevření textového souboru
+  * "w+t"
+  * "a+t"
+  * "rb" "b" otevření binárního souboru,
+  * "wb"
+  * "ab"
+  * "r+b"
+  * "w+b"
+  * "a+b"
+které umožňují jak čtení, tak zápis.
+Pokud není uveden žádný ze znaků "t" nebo "b" otevírá se daný soubor jako textový.
+Funkce vrací ukazatel na strukturu FILE odpovídající právě otevřenému souboru nebo hodnotu
+NULL, pokud při otevírání souboru došlo k chybě.
+
+FIXME: jak ošetřit chyby!!!
+======Čtení z textového proudu======
+int [[die.net>3/getc|getc]](FILE *soubor);
+Funkce přečte z proudu soubor jeden znak, který vrátí jako svou návratovou
+hodnotu. Pokud došlo při čtení k chybě, vrací funkce hodnotu EOF.
+
+char *[[die.net>3/fgets|fgets]](char* text, int max, FILE *soubor);
+Funkce přečte z proudu soubor text tvořící nejvýše jeden řádek a obsahující
+nejvýše max-1 znaků. Tento textový řetězec nakopíruje do textového řetězce text
+a vrátí ukazatel na začátek tohoto textového řetězce.
+Pokud došlo při čtení k chybě, vrací funkce hodnotu NULL.
+
+int [[die.net>3/fscanf|fscnaf]](FILE *soubor, const char* format, ...);
+Funkce pro formátované čtení z daného proudu soubor.
+Jde o obdobu funkce scanf, pouze se data čtou z daného proudu.
+Pro kontrolu vrací funkce fscanf počet úspěšně přečtených položek.
+
+======Zápis do textového proudu======
+int [[die.net>3/putc|puts]](int zn, FILE *soubor);
+Funkce zapíše do proudu soubor znak zn.
+Pokud při zápisu dojde k chybě, vrací funkce hodnotu EOF.
+
+int [[die.net>3/fputs|fputs]](const char *text, FILE *soubor);
+Funkce zapíše do proudu soubor textový řetězec text.
+Pokud při zápisu dojde k chybě, vrací funkce hodnotu EOF.
+
+int fprintf(FILE *soubor, const char *format, ...);
+Funkce pro formátovaný zápis do proudu soubor.
+Jde o obdobu funkce printf, pouze se data zapisují do daného proudu.
+Pro kontrolu vrací funkce fprintf počet úspěšně zapsaných položek.
+
+======Uzavření proudu======
+Pokud již z daného proudu (souboru) nebudeme číst ani do něj zapisovat,
+je vhodné tento proud uzavřít pomocí [[die.net>3/fclose]].
+
+int [[die.net>3/fflush|fflush]](FILE *soubor);
+Funkce pro vyprázdnění bufferu daného proudu soubor.
+V případě neúspěchu vrací konstantu EOF.
+
+int fclose(FILE *soubor);
+Funkce pro vyprázdnění bufferu a zavření proudu soubor. V případě neúspěchu
+vrací konstantu EOF.
+
+Vrácení znaku do bufferu
+V reálných aplikacích se často dovídáme o tom, že máme přestat číst až ve
+chvíli, kdy jsme přečetli první znak dalšího bloku dat (čili jeden znak navíc).
+Z tohoto důvodu je v jazyku C k dispozici funkce pro vrácení jednoho přečteného
+znaku zpět do bufferu.
+
+Deklarace funkce: int [[die.net>3/ungetc|ungetc]](int zn, FILE *soubor);
+
+Funkce vrátí daný znak zn do bufferu proudu soubor. Při úspěšném provedení
+vrací funkce jako svou návratovou hodnotu do bufferu navrácený znak, v případě
+----
+cc,upol

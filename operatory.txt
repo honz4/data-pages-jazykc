@@ -1,0 +1,142 @@
+====== Operátory ======
+    * [[dox>operatory/obsah-obdelniku.c|Obsah_obdélníku]]
+    * [[dox>operatory/sestrojitelnost-trojuhelniku.c|Sestrojitelnost_trojúhelníku]]
+    * [[dox>operatory/cela-cast.c|Celá_část]]
+    * [[dox>operatory/zaokrouhleni.c|Zaokrouhlení]]
+    * [[dox>operatory/bitovy-posun.c|demo operatoru bitoveho posunu]] [[wp>Bitwise_operation]]
+
+===== Doplňující informace =====
+Související pojmy
+Priorita je vlastnost operátorů udávající pořadí, ve kterém se operátory
+nacházející se v jednom výrazu vyhodnocují.
+V jazyku C jsou vyhodnocovány nejprve operátory s prioritou 1 (pokud jsou ve vyhodnocovaném výrazu obsaženy)
+a jako poslední s prioritou 15, viz [[cref>/language/operator_precedence]]
+Pořadí vyhodnocování operátorů lze pochopitelně změnit použitím kulatých závorek "(" a ")".
+
+U složitějších výrazů se doporučuje psát závorky také pro zvýšení přehlednosti zdrojového kódu.
+
+Asociativita operátorů dané prioritní třídy udává "směr",
+ve kterém se vyhodnocují operátory této třídy.
+V jazyku C odlišujeme asociativitu "zleva" a "zprava".
+Také asociativita operátorů může být zastíněna použitím závorek.
+
+Arita operátoru udává počet jeho operandů,
+čili počet výrazů, se kterými se daná operace provádí.
+V jazyku C máme k dispozici operátory
+  * unární (tj. s aritou 1),
+  * binární (tj. s aritou 2)
+  * a jeden operátor ternární (tj. s aritou 3).
+======Operátory přiřazení======
+Operátor přiřazení je binární, přičemž jeho levý operand musí být tzv. L-hodnota,
+čili výraz, který má adresu, na níž uložená hodnota může být změněna (typicky identifikátor proměnné).
+Pravý operand je pak libovolný výraz, jehož hodnota se při vyhodnocování operátoru uloží do levého operandu.
+Výsledná hodnota operátoru je tato přiřazovaná hodnota.
+Kromě jednoduchého přiřazení (operátor =), které bylo popsáno výše, existují
+další operátory přiřazení (+=, -=, *=, /=, %= atd.), které odpovídají
+modifikaci levého operandu odpovídajícím operátorem za použití pravého operandu
+(např. x += 2 odpovídá x = x + 2).
+Příklady:
+<code c>
+i = j = k = 2; /* vícenásobné přiřazení */
+x = 2 + (y = 3 * z * z + 2 * y); /* syntakticky možné, ale velmi nepřehledné */
+</code>
+======Aritmetické operátory======
+Unární plus a mínus (např. +2, -cislo)
+Binární plus a mínus (např. i+3, a-b)
+Dekrementace (snížení hodnoty o 1) a inkrementace (zvýšení hodnoty o 1) (např.
+i--, ++c)
+Operátory dekrementace a inkrementace mají vedlejší efekt - mění hodnotu svého
+operandu (ten tedy musí být L-hodnota).
+Oba operátory lze použít jak prefixově (před operandem) tak postfixově (za operandem),
+přičemž se liší výslednou hodnotou výrazu.
+V prefixovém tvaru je výslednou hodnotou výrazu hodnota
+operandu před snížením (resp. zvýšením) o 1,
+v postfixovém tvaru pak hodnota operandu po snížení (resp. zvýšení).
+Příklady:
+<code c>
+int i = 1, j, k;
+j = i++;  /* j má hodnotu 1, i má hodnotu 2 */
+k = ++i;  /* k má hodnotu 3, i má hodnotu 3 */
+</code>
+Krát, děleno, modulo (zbytek po celočíselném dělení) (např. 2*a, 4/3, 5%b)
+Výsledné hodnoty operátorů odpovídají daným matematickým operacím.
+Vyjímkou je pouze operátor děleno /,
+který se v případě dvou celočíselných operandů chová jako celočíselné dělení.
+======Logické operátory======
+V jazyku C máme k dispozici operátor
+  * logického součinu && (odpovídající logické spojce "a zároveň", např. a&&b),
+  * logického součtu || (logická spojka "nebo", např. a||b)
+  * a negace ! (např. !a).
+Logických operátorů se týká také pojem líné vyhodnocování,
+které spočívá ve vyhodnocování pouze té části výrazu (složené logické podmínky),
+kterou je nutné vyhodnotit pro zjištění výsledné logické hodnoty.
+
+Operátory porovnání (např. a<1, 2>b, 2<=3, a>=b, a==1, b!=2)
+Výslednou hodnotou všech operátorů porovnání je odpovídající logická hodnota
+(nula znamená nepravdu, cokoli jiného pravdu).
+Význam většiny operátorů porovnávání je intuitivní.
+Zmíníme tedy pouze operátor rovnosti ==, který je
+potřeba nezaměňovat s operátorem přiřazením =, a operátor "nerovná se" !=.
+======Přetypování======
+Implicitní (automatické) přetypování
+Před provedením každé operace (vyhodnocením operátoru) dochází ke konverzi
+celočíselných operandů typů char, unsigned char, short, unsigned short na typ
+int a operandů typu float na typ double.
+Pokud mají operandy i poté různé typy provádí se postupně konverze int na unsigned int, unsigned int na long, long na
+unsigned long, unsigned long na double a double na long double dokud nejsou
+typy operandů shodné.
+U přiřazovacích příkazů se typ výrazu vpravo konvertuje na typ levé strany,
+což je i typ výsledku vyhodnocení přiřazovacího operátoru.
+Explicitní (požadované, vynucené) přetypování
+V některých situacích je potřeba si změnu typu výrazu vynutit.
+Například z důvodů odstranění varovných hlášení překladače (viz příklad 1) nebo k "ořezání"
+reálného čísla a získání jeho celé části (viz příklad 2).
+Obecná syntaxe: (požadovaný_typ)výraz
+Příklad 1:
+<code c>
+int i = 10;
+double f;
+f = sqrt((double)i);
+</code>
+Příklad 2:
+<code c>
+float f = 10.23;
+int i;
+i = (int)f;
+</code>
+Operátor sizeof (např. sizeof(int), sizeof(moje_cislo))
+Operátor sizeof se vyhodnocuje na celé číslo odpovídající velikosti operandu
+(datového typu nebo proměnné) v bytech.
+======Podmínkový operátor======
+např. (a>b)?a:b
+Ternární operátor, který se na základě vyhodnocení podmínky (první operand)
+vyhodnotí buď na výsledek vyhodnocení druhého (podmínka je splněna) nebo
+třetího operadu (podmínka je nesplněna). Tento operátor je tedy možné použít
+pro větvení v rámci jednoho výrazu.
+Obecná syntaxe: podmínka ? výraz_1 : výraz_2
+======Operátor čárka======
+Operátor čárka se používá k vytváření sekvenčních výrazů.
+Operátor se vyhodnocuje tak, že se vyhodnotí první operand (výsledek vyhodnocení je "zapomenut"),
+vyhodnotí se druhý operand a jeho hodnota je rovněž výsledkem vyhodnocení celého sekvenčního výrazu.
+Praktické využití tohoto operátoru je především v řídících řádcích cyklů.
+Obecná syntaxe: výraz_1, výraz_2
+======Přehled operátorů jazyka C======
+viz [[cref>/language/operator_precedence]]
+^Prior.^Operátory                            ^Asociativita^Arita^
+|1     |() [] %%->%% .                       |zleva       | |
+|2     |! ~ ++ -- + - (typ) * & sizeof       |zprava      |unární|
+|3     |* / %                                |zleva       |binární|
+|4     |+ -                                  |zleva       |binární|
+|5     |%%<<%% %%>>%%                        |zleva       |binární|
+|6     |< > <= >=                            |zleva       |binární|
+|7     |== !=                                |zleva       |binární|
+|8     |&                                    |zleva       |binární|
+|9     |%%^%%                                |zleva       |binární|
+|10    |%%|%%                                |zleva       |binární|
+|11    |&&                                   |zleva       |binární|
+|12    |%%||%%                               |zleva       |binární|
+|13    |? :                                  |zprava      |ternární|
+|14    |= += -= *= /= %= %%>>= <<= &= |= ^=%%|zprava      |binární|
+|15    |,                                    |zleva       |binární|
+
+cc,upol

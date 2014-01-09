@@ -1,0 +1,91 @@
+====== Cykly ======
+    * [[dox>cykly/nasobilka.c|Násobilka]]
+    * [[dox>cykly/prvocisla.c|Prvočísla]]
+    * [[dox>cykly/ctverec.c|Čtverec]]
+
+Cykly jsou jedním ze základních stavebních kamenů programu, umožňují totiž
+opakování některých instrukcí (příkazů) při výpočtu. Všechy 3 níže uvedené typy
+cyklů jsou navzájem nahraditelné, rozhodnutí, který typ cyklu v dané situaci
+použít,je tedy spíše otázkou stylu a větší či menší přehlednosti zdrojového
+kódu. Cykly je také možné do sebe libovolně vnořovat.
+======Cyklus while======
+Konstrukce cyklu s podmínkou testovanou na začátku. Díky tomu nemusí vůbec
+dojít k provádění příkazů těla cyklu, pokud bude podmínka cyklu před prvním
+průchodem nesplněna.
+Syntaxe:
+while (podmínka) příkaz
+Příklad (Euklidův algoritmus):
+<code c>
+int a = 96;
+int b = 84;
+while (b != 0){
+   int r;
+   r = a % b;
+   a = b;
+   b = r;
+}
+</code>
+======Cyklus do-while======
+Cyklus s podmínkou testovanou na svém konci. Tento typ cyklu vždy alespoň
+jednou proběhne (až po prvním průběhu je testovaná podmínka).
+Syntaxe:
+do příkaz while (podmínka);
+Příklad (Euklidův algoritmus):
+<code c>
+int a = 96;
+int b = 84;
+do {
+   int r;
+   r = a % b;
+   a = b;
+   b = r;
+} while (b != 0);
+</code>
+======Cyklus for======
+Složitější konstrukce cyklu, která se typicky používá pro cykly s pevným počtem
+opakování.
+Syntaxe:
+for (start; podmínka; iterace) příkaz
+kde
+  * start je výraz, který se vyhodnotí před prvním průchodem cyklu (typicky inicializace proměnných),
+  * podmínka je logický výraz vyhodnocovaný před každým průchodem cyklu, pokud je splněn pokračuje se další iterací, pokud není pokračuje se příkazy za cyklem,
+  * a iterace je výraz vyhodnocovaný na konci každého průchodu (typicky inkrementace proměnných).
+Příklad:
+<code c>
+int i;
+for (i = 10; i < 100; i++){
+   switch (i % 2){
+      case 0: printf("%d je sude\n", i);
+              break;
+      case 1: printf("%d je liche\n", i);
+              break;
+   }
+}
+</code>
+======Přerušení cyklu======
+Příkaz continue; slouží pro přeskočení zbývajících příkazů těla nejvnitřnějšího
+cyklu, výpočet pokračuje další iterací cyklu (včetně testu případné podmínky).
+
+Příkaz break; naopak okamžitě opouští nejvnitřnějšího cyklus, pokračuje se
+příkazy za tímto cyklem.
+
+Příklady cyklů
+<code c>
+/* "nekonečný" cyklus, musí obsahovat větev s příkazem break; */
+while (1) {...}
+
+/* "nekonečný" cyklus, musí obsahovat větev s příkazem break; */
+for (;;) {...}
+
+/* cyklus for s více výrazy v řídícím řádku */
+for (i = 1,s = 0; i < 100; s += i, i++) { ... }
+
+/* cyklus se všemi příkazy v řídícím řádku a prázdným tělem; nepřehledný -
+nepoužívá se */
+for (i = 0; i < 10; printf("%i\n", i), i++);
+
+/* cyklus pro i od -10 do 10 s krokem +2 */
+for (i = -10; i <= 10; i += 2) {...}
+</code>
+----
+cc, upol

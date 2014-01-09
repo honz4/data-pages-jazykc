@@ -1,0 +1,22 @@
+====== Rekurzivní funkce ======
+  * [[dox>rekurzivni-funkce/fibonacciho-cisla.c|Fibonacciho_čísla]]
+  * [[dox>rekurzivni-funkce/hledani-pulenim-intervalu.c|Hledání_půlením_intervalu]]
+======Rekurzivní funkce======
+Funkce, která ve svém těle volá sama sebe (jeden nebo více příkazů těla této
+funkce obsahuje volání této funkce), se nazývá //rekurzivní//.
+
+Princip rekurze spočívá ve "zjednodušování" daného problému při postupném volání funkce.
+V rekurzivních funkcích vždy existuje mezní podmínka (vyjadřující řešení
+elementárního problému, např. faktoriál čísla 0, třídění jednoprvkové
+posloupnosti), při jejímž splnění dojde k přerušení rekurze.
+Příklady rekurzivních funkcí
+  * výpočet faktoriálu,
+  * výpočet fibonacciho čísla,
+  * quicksort,
+  * metoda půlení intervalu, ...
+  * h0nza: hmm, jakýkoli cyklus lze jako rekurzi?
+
+Pro a proti:
+  * elegance
+  * režie zásobníku!!! nemáme ocasní rekurzi (tailcall)
+  * nemáme lambda, letrec, y-kombinator ...

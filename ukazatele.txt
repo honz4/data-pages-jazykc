@@ -1,0 +1,127 @@
+====== Ukazatele ======
+    * [[dox>ukazatele/porovnani-textovych-retezcu.c|Porovnání_textových_řetězců]]
+    * [[dox>ukazatele/hledani-podretezce-zprava.c|Hledání_podřetězce_zprava]]
+======Ukazatel======
+Ukazatel (anglicky pointer) je proměnná,
+která slouží pro uložení adresy v paměti (např. jiné proměnné) a pro práci s adresami.
+
+Ukazatel/pointer je použit ve 3 "kontextech":
+  * je proměnná (pointer)
+  * je typu pointer na //typ//, použije se znak **%%*%%**, podobně jako [] pro pole/array
+  * obsahující adresu (pointer), adresa se získá pomocí operátor **&**
+
+V jazyku C používáme ukazatele na konkrétní datový typ,
+při definici ukazatele je tedy nutné specifikovat datový typ proměnných,
+ke kterým budeme přes tento ukazatel přistupovat.
+Deklarace ukazatelů
+
+Syntaxe: **''//typ// *//identifikátor// = //inic_výraz//;''**\\
+kde //typ// je datový typ, se kterým bude ukazatel pracovat, identifikátor je
+identifikátor ukazatele a inic_výraz je inicializační hodnota
+(měla by to být adresa, na které jsou uložena data daného typu).
+Příklady deklarací:
+<code c>
+int  *pi; /* deklarace (ne! definice) ukazatele na číslo typu int */
+char *ret = "bla bla"; /* ukazatel inicializovaný adresou prvního znaku v řetězci */
+int   pole[10];
+int  *p = pole; /* ukazatel inicializovaný adresou pole, resp. prvního čísla v poli */
+long cislo, *pl1, *pl2 ; /* deklarace proměnné a dvou ukazatelů na jednom řádku */
+</code>
+======Operátor adresy &======
+Tento operátor slouží pro zjištění adresy dané proměnné.
+Příklady:
+<code c>
+int i=2, *pi = &i, j; /* inicializace ukazatele adresou proměnné */
+pi = &j; /* přiřazení adresy proměnné ukazateli */
+scanf("%i", &i); /*uložení přečtené hodnoty na danou adresu */
+</code>
+======Operátor dereference *======
+  * FIXME: vyjasnit termín de/reference versus odkaz -- {{:Navrhove_vzory_-_ICZ.pdf|Pecinovský, str. 68}}, Virius?
+  * [[wp>Hungarian_Notation|maďarská notace]]
+
+Operátor slouží pro přístup k hodnotě na dané adrese.
+Příklady:
+<code c>
+*pi = 3; /* změna hodnoty na adrese ukazatele */
+(*pi)++; /* inkrementace hodnoty na adrese ukazatele */
+printf("%i\n", *pi); /* výpis hodnoty na adrese ukazatele */
+</code>
+======Pointerová aritmetika======
+Protože ukazatele reprezentují adresy, lze s nimi provádět pouze některé
+aritmetické operace:
+  * přičtení (resp. odečtení) celočíselného výrazu k/od ukazatele
+  * rozdíl dvou ukazatelů stejného typu
+Příklad využití pointerové aritmetiky:
+<code c>
+char str[] = "Ahoj!";
+char *pom = str;
+
+while(*pom != '\0') {
+   printf("%c\n", *pom);
+   pom++;
+}
+printf("Délka řetězce je %i.\n", pom - str);
+</code>
+======Vztah ukazatelů a polí======
+Stručně lze říci, že identifikátor pole <del>se chová jako</del>představuje konstantní ukazatel na
+první prvek v poli. Přístup k prvkům pole pomocí operátoru indexu lze tedy
+nahradit přístupem pomocí ukazatele, pointerové aritmetiky a operátoru dereference.
+Příklad:
+<code c>
+char str[] = "Ahoj Svete!";
+char *pom;
+int i;
+
+for (i = 0; i < (int)strlen(str); i++)
+   printf("%c", str[i]);
+
+pom = str;
+while (*pom != '\0') {
+   printf("%c", *pom);
+   pom++;
+}
+</code>
+======Ukazatel na strukturu======
+Tento typ ukazatele definujeme stejně jako ukazatel na jakýkoli jiný typ.
+Pouze při přístupu ke členům struktury na adrese dané ukazatelem je možné místo
+operátoru dereference a operátoru tečky použít operátor ->, což vede ke
+zjednodušení/zpřehlednění zdrojového kódu.
+
+Ekvivalentní možnosti přístupu ke členu struktury přes ukazatel:
+<code c>
+(*ptr_struktury).id_clenu
+  ptr_struktury->id_clenu
+</code>
+Příklad:
+<code c>
+typedef struct {char Den, Mesic;} Datum;
+Datum den = {12, 2};
+Datum *narozen = &den;
+narozen->Den = 25;
+</code>
+======Struktura "uvnitř sebe sama"======
+V některých situacích (např. vytváření fronty, zásobníku, seznamu) je potřeba
+vytvořit strukturu, která bude mít informace o jiné struktuře stejného typu.
+Jak již víme, není možné mít ve strukturovaném datovém typu člen stejného
+strukturovaného typu.
+
+Toto omezení se dá obejít použítím ukazatelů, když členem
+struktury bude ukazatel na strukturu stejného typu.
+
+h0nza: IMO nejde o obejití, použití pointeru je to správné řešení!
+
+Příklady definice struktury:
+<code c>
+struct s1 {int data; struct s1 *dalsi;};
+
+typedef struct s1{
+   int data;
+   struct s1 *dalsi;
+} seznam;
+</code>
+Příklady použití struktury:
+<code c>
+struct s1 a = {1, NULL};
+seznam b = {2, &a};
+b.dalsi->data = 0;
+</code>

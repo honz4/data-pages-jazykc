@@ -1,0 +1,13 @@
+====== todo, náměty======
+  * funkcni pointer: qsort,bsearch,atexit, signal filter, resp. ostatni...
+  * error
+  * label: goto label1;
+  * seznam keyword
+  * interwiki: cppreference C,C++
+  * :c namespace
+  * :lcthw namespace
+  * kapitola o souborech!!!
+  * obrázky!
+  * lepší, další příklady
+  * doxygen
+  * knihovnicka!

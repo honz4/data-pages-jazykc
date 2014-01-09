@@ -1,0 +1,57 @@
+====== Jednorozměrná pole ======
+    * [[dox>jednorozmerna-pole/obraceni-pole.c|Obrácení_pole]]
+    * [[dox>jednorozmerna-pole/eratosthenovo-sito.c|Eratosthenovo_síto]]
+    * [[dox>jednorozmerna-pole/aritmeticky-prumer-pole.c|Aritmetický_průměr_pole]]
+
+Pole je homogenní (všechny prvky mají stejný typ) datová struktura s přímým přístupem k jednotlivým prvkům.
+Pole má úzký vztah s [[ukazatele|ukazateli]]
+======Deklarace pole======
+Bez inicializace (obecně):
+  typ_pole identifikátor[velikost_pole];
+kde
+  * //typ_pole// je datový typ prvků v poli a
+  * //velikost_pole// kladná celočíselná konstanta udávající maximální počet prvků v poli.
+Příklad:
+<code c>
+int moje_cisla[10]; /* pole 10 čísel typu int */
+</code>
+S inicializací (obecně):
+  typ indentifikátor[velikost] = {prvek_1, ..., prvek_N};
+kde navíc //prvek_1// až //prvek_N// udávají inicializační hodnoty prvních N prvků pole
+(N je menší nebo rovno velikost).
+
+Pokud chceme vytvořit pole přesně pro inicializací daný počet hodnot, nemusí být velikost uvedena.
+Příklady:
+<code c>
+int cisla[5] = {1, 2, 3, 4, 5};
+int cisla[] = {1, 2, 3, 4, 5};
+char str[] = "Ahoj svete"; /* textový řetězec je pole znaků */
+char ach[] = {'0', '1', '\0'}; /* textový řetězec je pole znaků -- je to složitější */
+</code>
+======Přístup k prvkům======
+K jednotlivým prvkům pole přistupujeme pomocí operátoru indexu [ ] uvedeným za
+identifikátorem pole.
+Uvnitř závorek operátoru je pak potřeba uvést celé číslo odpovídající indexu prvku v poli.
+V jazyku C je pole indexováno od 0, tj. první prvek pole má index 0, poslední N-1, prvek[N] neexistuje!!!
+Příklad:
+<code c>
+int i;
+int pole[10];
+for (i = 0; i < 10; i++){
+   pole[i] = i+1;
+}
+for (i = 0; i < 10; i++){
+   printf("%i, ", pole[i]);
+}
+</code>
+======Textové řetězce======
+Textové řetězce jsou v jazyku C reprezentovány jednorozměrnými poli znaků
+ukončenými znakem s nulovou hodnotou '\0'.
+Z tohoto důvodu musí být velikost pole rovna délce odpovídajícího řetězce zvětšené o 1.
+Pole znaků definujte vždy takto:
+<code c>
+char buffer[100+1];//100+1 sečte kompilátor
+</code>
+Standardní funkce pro práci s textovými řetězci jsou k dispozici v knihovně [[:c:string.h]].
+----
+cc, upol

@@ -1,0 +1,33 @@
+====== Předání parametru odkazem ======
+  * [[dox>predani-parametru-odkazem/transformace-textu.c|Transformace_textu]]
+  * [[dox>predani-parametru-odkazem/celociselne-deleni.c|Celočíselné_dělení]]
+  * [[dox>predani-parametru-odkazem/swap.c|swap]]
+  * param[in] param[out], param[in,out]
+
+======Předání parametru hodnotou======
+Jedná se o námi doposud užíváný způsob předání parametrů funkci,
+který je vhodný pouze pro vstupní parametry a datové typy s relativně malou velikostí
+(základní datové typy, malé struktury).
+
+Formální parametr je běžná proměnná požadovaného typu (např. int moje_fce(int data);),
+skutečný parametr při volání funkce je pak libovolný výraz daného typu (např. vysl = moje_fce(3 * cislo);).
+
+Při realizaci volání funkce se hodnota skutečného parametru ukládá do oblasti
+parametrů funkce v paměti.
+
+terminologie: parametr versus argument
+
+======Předání parametru odkazem======
+Tento způsob předání parametrů lze použít jak pro vstupní tak pro výstupní
+parametry funkce.
+Běžně se používá se pro předání pole (pole nelze předat hodnotou),
+větších struktur a jakýchkoli dalších typů, mají-li být výstupní.
+
+Formální parametr zde je ukazatel na požadovaný typ (např. int moje_fce(int
+*data);), skutečný parametr při volání funkce je pak adresní výraz (např. vysl
+= moje_fce(&cislo);).
+Při realizaci volání funkce se do oblasti parametrů funkce ukládá pouze adresa,
+funkce používá dereferenci,
+data se nekopírují a lze k nim tedy přistoupit i po opuštění funkce.
+----
+cc,upol

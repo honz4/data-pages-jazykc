@@ -1,0 +1,65 @@
+====== Bitové operátory a bitová pole ======
+    * [[dox>bitove-operatory-a-bitova-pole/datumy.c|Datumy]]
+    * [[dox>bitove-operatory-a-bitova-pole/mnozinove-operace.c|Množinové_operace]]
+======Bitové operátory======
+Jedná se o souhrný název pro operátory, které pracují s jednotlivými bity hodnot svých operandů.
+V jazyku C máme k dispozici tyto bitové operátory:
+  * bitový součin &,
+  * bitový součet |,
+  * bitovou nonekvivalenci (XOR) ^,
+  * bitovou negaci (jedničkový doplněk) ~,
+  * bitový posun vpravo >> a
+  * bitový posun vlevo <<.
+Operandy těchto operátorů mohou být pouze celočíselné.
+Naopak velkou výhodou bitových operací je jejich výpočetní nenáročnost (operátory se vyhodnocují velmi rychle).
+Příklady:
+<code c>
+c  = c & 0xDF; /* převod na velká písmena */
+c |= 0x20;  /* převod na malá písmena */
+x  = x << 3; /* násobení 3. mocninou čísla 2 */
+x >>= 2; /* dělení 2. mocninou čísla 2 */
+</code>
+======Práce se skupinou bitů======
+Bitové operátory se často používají při práci se skupinami bitů (více informací uložených v jedné proměnné).
+Pomocí definovaných bitových masek (např.  konstanty READ, WRITE a DELETE v příkladu níže)
+pak můžeme relativně jednoduše a velmi rychle pracovat s více souvisejícími informacemi uloženými v jediné celočíselné proměnné.
+Příklad:
+<code c>
+#define READ 0x8
+#define WRITE 0x10
+#define DELETE 0x20
+...
+unsigned int status;
+status |= READ | WRITE | DELETE;
+status |= READ | WRITE;
+status &= ~(READ | WRITE | DELETE);
+status &= ~READ;
+</code>
+======Bitová pole=====
+Bitová pole umožňují pracovat s jednotlivými bity nebo skupinami bitů proměnných pomocí symbolických jmen.
+Vytváříme je podobně jako strukturované datové typy,
+jednotlivé členy mohou být ovšem pouze "typu" unsigned (neznaménkové)
+nebo signed (znaménkové) a za každým členem uvádíme za dvojtečkou počer bitů, které budou pro tento člen vyhrazeny.
+Velikost celého bitového pole je pak omezena na maximálně sizeof(int) bytů.
+Příklad deklarace bitového pole:
+<code c>
+typedef struct {
+   unsigned den : 5;
+   unsigned mesic : 4;
+   unsigned rok : 7;
+} DATUM;
+//Příklad vytvoření proměnné:
+DATUM dnes = {23, 4, 2008 - 1980};
+DATUM zitra = dnes;
+//Příklady přístupu k položkám:
+zitra.den++;
+dnes.mesic = 6;
+dnes.rok = 2009 - 1980;
+
+if ((dnes.rok != d.rok) || (dnes.mesic != d.mesic) || (dnes.den != d.den))
+{...}
+
+printf("%u. %u.%u\n", d.den, d.mesic, d.rok + 1980);
+</code>
+----
+cc,upol

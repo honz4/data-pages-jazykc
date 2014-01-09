@@ -1,0 +1,79 @@
+====== Větvení programu ======
+  * [[dox>vetveni-programu/rozpoznani-znaku.c|Rozpoznání_znaku]]
+  * [[dox>vetveni-programu/maximum.c|Maximum]]
+  * [[dox>vetveni-programu/vypocet-progresivni-dane.c|Výpočet_progresivní_daně]]
+
+======Blok příkazů======
+Konstrukce bloku umožňuje zapouzdřit více příkazů (a deklarací proměnných) do
+jednoho celku. Tento je pak možné použít jako by se jednalo o jeden příkaz.
+Bloků se prakticky využívá při větvení programu (větev může mít více příkazů) a
+při konstrukcí cyklů (cyklus složený z více příkazů).
+Obecná syntaxe:
+  {
+  deklarace_1;
+  ...
+  deklarace_M;
+  příkaz_1;
+  ...
+  příkaz_N;
+  }
+
+======Konstrukce if======
+Příkaz [[:c:if]] umožňuje zapsat v kódu příkaz (nebo blok příkazů),
+který se bude provádět pouze tehdy, pokud bude splněna zadaná podmínka.
+V příkazu lze definovat pomocí klíčového slova [[:c:if#else]] také větev,
+jejíž příkazy se budou provádět při nesplnění podmínky.
+Příkaz if může být vnořen (tj. vyskytovat se v libovolné větvi jiného příkazu if).
+Syntaxe jednoduchého if:
+  if (podmínka) příkaz
+Příklad:
+<code c>
+if (x == 0) printf("Proměnná x je nula.\n");
+</code>
+Syntaxe s využití větve else:
+  if (podmínka) příkaz_1 else příkaz_2
+Příklad:
+<code c>
+if (x > 0) printf("x je kladné\n");
+else printf("x není kladné\n");
+</code>
+======Konstrukce switch======
+Příkaz [[:c:switch]] slouží k větvení programu do libovolného počtu větví v závislosti
+na předaném celočíselném výrazu.
+Jednotlivé větve tohoto příkazu se provádějí, má-li předaný výraz jim odpovídající hodnotu.
+Nelze zde tedy vytvářet libovolné podmínky.
+
+V konstrukci switch lze definovat také [[:c:switch:default]] větev, která se bude provádět,
+pokud výraz nenabude žádné z uvedených hodnot.
+Obecná syntaxe:
+  switch (celočíselný_výraz){
+     case konstanta_1: příkazy_1
+	  break;
+     ...
+     case konstanta_N: příkazy_N
+	  break;
+     default: příkazy_default_větve
+  }
+
+Příklad:
+<code c>
+switch (cislo){
+   case 1: printf("cislo je 1\n");
+           break;
+   case 2: printf("cislo je 2\n");
+           break;
+   default: printf("neco jineho\n");
+}
+</code>
+Vynecháním příkazů break na konci jednotlivých větví je možné vytvořit také
+větev pro více hodnot daného výrazu.
+Příklad:
+<code c>
+switch (cislo){
+   case 1:
+   case 2: printf("cislo je 1 nebo 2\n");
+           break;
+   default: printf("neco jineho\n");
+}
+</code>
+cc,upol

@@ -1,0 +1,133 @@
+====== Základy jazyka C ======
+    * [[dox>zaklady-jazyka-c/hello-world.c|Hello_World]]
+    * [[dox>zaklady-jazyka-c/prace-s-promennymi.c|Práce_s_proměnnými]]
+    * [[dox>zaklady-jazyka-c/osmickovy-a-sestnactkovy-vystup.c|Osmičkový_a_šestnáctkový_výstup]]
+===== Doplňující informace =====
+Obecné vlastnosti programu v jazyce C
+  * rozlišuje se velikost písmen (jazyk C je case-sensitive)
+  * přičemž většina slov tvořících program ([[keyword|klíčová slova jazyka]], datové typy, názvy standardních funkcí a maker) jsou psány malými písmeny.
+  * Ignorují se tzv. bílé znaky (odřádkování, tabulátor, mezery)
+  * Doporučuje se využívat těchto znaků pro zvýšení přehlednosti zdrojového kódu programu
+  * Program se skládá z příkazů - výrazů ukončených středníkem.
+  * Pro větší přehlednost programu bývá zvykem psát jednotlivé příkazy na samostatné řádky.
+  * doporuční pro styl viz [[http://tux.inf.upol.cz/~havrlant/vyuka/2013/zp1/konvence.php]]
+<code c>
+int cislo, x, y;
+z = x * y / 2 / PI;
+printf("Výsledek je: %d", cislo);
+</code>
+======Kostra programu======
+Jednoduché programy, které budete v několika prvních cvičeních psát, se budou
+vždy skládat pouze z tzv. hlavní funkce programu.
+Veškeré příkazy budete psát do této funkce.
+<code c>
+#include <stdio.h>
+
+int main() {
+   /* Tady bude vlastni posloupnost prikazu. */
+
+   return 0;
+}
+</code>
+======Datové typy======
+Základní datové typy jazyka C můžeme rozdělit na celočíselné datové typy a reálné datové typy.
+U celočíselných datových typů pak navíc rozlišujeme,
+zda se jedná o typ znaménkový (pro kladná i záporná čísla)
+nebo neznaménkový (pouze pro nezáporná čísla).
+
+Jazyk C nemá datový typ odpovídající logické hodnotě (pravda nebo nepravda),
+místo něj je možné použít některý z celočíselných datových typů,
+přičemž hodnota 0 je brána jako nepravda a jakákoli jiná hodnota jako pravda.
+honz4: [[c99#bool]]
+
+======Celočíselné typy======
+Seřazeny vzestupně podle rozsahu reprezentovaných čísel:
+  * char (vhodný především pro znaky)
+  * short int (v pragramu lze zkrátit na short)
+  * int
+  * long int (v programu lze zkrátit na long)
+Všechny výše uvedené typy mohou být specifikovány jako signed nebo unsigned
+(např. signed short int, unsigned char), přičemž signed je implicitní a tudíž
+se většinou vynechává.
+======Reálné typy======
+h0nza: myslí se tím čísla v plovoucí čárce (Fortran REAL)
+Seřazeny vzestupně podle rozsahu a přesnosti reprezentovaných čísel:
+  * float
+  * double
+  * long double, až [[:c:c99]]?
+======Celočíselné konstanty======
+h0nza: literál (doslovná) hodnota určitého typu
+
+V jazyku C jsou celočíselné konstanty vnitřně reprezenttovány implicitně typem int,
+uvedením znaku **L** (resp. **l**) za konstantu lze tento typ změnit na long int.
+Uvedením znaku **U** (resp. **u**) za konstantu lze změnit vnitřní reprezentaci na unsigned.
+
+Základní číselnou soustavou pro zápis konstant v jazyku C je soustava desítková.
+Dále je možné využít osmičkový zápis (uvedením znaku '0' na začátku konstanty)
+a šestnáctkový zápis (uvedením dvojice znaků '0x' nebo '0X' na začátku konstanty).
+
+V šestnáctkové soustavě pak kromě číslic '0' až '9' používáme číslice 'A' až 'F' (resp. 'a' až 'f').
+
+Znakové konstanty jsou tvořeny libovolným znakem uzavřeným do apostrofů.
+Příklady:
+    * desítkový zápis: 10, 1234589, 15u, 1366L, -56, 42LU
+    * osmičkový zápis: 07, 0124, 073
+    * šestnáctkový zápis: 0xA1B, 0x0, 0X1d3, 0xac
+    * znakové konstanty: 'a', '*', '3', '\'' (pro znak apostrof)
+
+======Reálné konstanty======
+V jazyku C jsou reálné konstanty vnitřně reprezentovány implicitně typem
+double, uvedením znaku 'L' (resp. 'l') za konstantu lze tento typ změnit na
+long double a uvedením znaku 'F' (resp. 'f') za konstantu na typ float.
+Reálné konstanty je možné psát také v semilogaritmickém tvaru, kde mantisa a exponent
+jsou odděleny znakem 'E' (resp. 'e').
+Příklady:
+  * standardní zápis: 123.56, 15. , .86, -13.2f, 1.23F, 23.128L
+  * semilogaritmický tvar: 2.1425e-3, 2.1e+4L, 2E-10
+======Proměnné======
+Definice proměnné v jazyku C povinně obsahuje specifikaci datového typu a
+identifikátoru proměnné,
+který je tvořen libovolnou posloupností písmen, číslic a znaku podtržítko.
+Volitelně je možné uvést také inicializační hodnotu proměnné.
+Přestože pro větší přehlednost zdrojového kódu obvykle definujeme
+každou proměnnou novým příkazem, je syntakticky možné zapsat definici více
+proměnných stejného typu do jediného příkazu.
+Příklady:
+<code>
+int moje_cislo;
+unsigned short int male_kladne_cislo;
+char muj_znak = '*'; /* definice s inicializací */
+int c1, c2 = 3, c3; /* definice více proměnných */
+</code>
+======Základní vstup a výstup======
+Vstup a výstup na <del>obrazovku</del>
+je v jazyku C řešen <del>standardními</del> funkcemi [[:c:libc|standardní knihovny]] [[:c:stdio.h#scanf]] a [[:c:stdio.h#printf]].
+Prvním parametrem obou funkcí je tzv. řídící textový řetězec, který určuje co se má vypisovat či načítat,
+a za ním následují hodnoty, které se budou vypisovat,
+nebo proměnné, do nichž se budou uživatelem zadávané hodnoty vkládat.
+Použití funkcí obecně:
+<code c>
+printf("řídící řetězec", hodnota1, ...);
+scanf("řídící řetězec", &promenna1, ...);
+</code>
+Konkrétní příklady:
+printf("Součet je %d", suma);
+printf("Součet je %d", x + y);
+printf("Součet je %d\t Součin je %d\n", x + y, x * y);
+printf("Plán jsme splnili na 100%%.");
+printf("Dekadicky %d je oktalově %o a hexadecimálně %x.\n", cislo, cislo, cislo);
+scanf("%d", &cislo);
+scanf("%d %o %x", &cislo1, &cislo2, &cislo3);
+</code>
+Základní možnosti řídícího řetězce:
+    * %c pro výpis nebo načtení znaku
+    * %d (resp. %i) pro celé číslo desítkově znaménkově
+    * %u pro celé číslo desítkově neznaménkově
+    * %o pro celé číslo osmičkově
+    * %x (resp. %X) pro celé číslo šestnáctkově
+    * %f pro desetinné číslo
+    * %e (resp. %E) pro desetinné číslo semilogaritmicky
+    * %g (resp. %G) pro výpis desetinného čísla standardně nebo semilogaritmicky na základě jeho hodnoty
+
+----
+cc,upol

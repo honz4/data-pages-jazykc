@@ -4,9 +4,11 @@
   * [[dox>ukazatele-na-funkce/akumulator.c|Akumulátor]]
   * FIXME než "umělé" příklady udělat příklady na [[die.net>3/qsort]], [[die.net>3/bsearch]]
     * [[dox>ukazatele-na-funkce/stdlib-qsort.c|stdlib.h qsort()]] [[die.net>3/qsort]]
-  * vysvětlit termím //callack// !!!
-  * příklad na expat!
-  * možná taky compare callback, dispoze callback, userdata/clientData,
+  * vysvětlit termín //callack// !!!
+  * příklad na expat! XML parser -- plné callbacků
+  * možná taky compare callback: komparátor viz **qsort** příklad, student musí umět použít **qsort**
+  * příklad na [[die.net>3//bsearch]] binary search se také v [[:c:libc|standardní knihovně]]!!!
+  * dispoze callback, userPtr/userdata/clientData,
   * "methoda" -- funkční pointer jako //member// struktury
 
 =====Deklarace ukazatele na funkci=====
@@ -18,7 +20,7 @@ Příklad <del>deklarace</del>definice:
 double (*p_fdd)(double);
 //             ^------^--- typ
 </code>
-FIXME: odkaz na to, jak se čtou deklarátory/typy!!!
+odkaz na website [[http://cdecl.org|jak se čtou deklarátory/typy]]
 
 Uvědomte si: ( závorky ) představují 4 různé operátory:
   * typ (v deklaraci/definici/přetypování)

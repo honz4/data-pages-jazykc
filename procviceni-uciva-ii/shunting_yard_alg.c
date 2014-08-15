@@ -18,22 +18,12 @@ enum { ASSOC_NONE=0,ASSOC_LEFT=1,ASSOC_RIGHT=2,  UNARY=0x10};
 static int eval_mul (int op1, int op2) { return op1 * op2; }
 static int eval_add (int op1, int op2) { return op1 + op2; }
 static int eval_sub (int op1, int op2) { return op1 - op2; }
-/* celociselna mocnina
- * http://stackoverflow.com/questions/101439/the-most-efficient-way-to-implement-an-integer-based-power-function-powint-int
- * http://en.wikipedia.org/wiki/Exponentiation_by_squaring
- */
-int ipow (int base, int exp) {
-    int result = 1;
-    while (exp) {
-      if (exp & 1) result *= base;
-      exp >>= 1;
-      base *= base;
-    }
-    return result;
-}
+
+/* celociselna mocnina */
+#include "up/math.h" /* ipow() */
 static int eval_pow (int op1, int op2) { return ipow(op1, op2); }
 
-//todo: tabulku definovat dynamicky, qsort + bsearch
+//todo: tabulku definovat dynamicky, qsort + bsearch nebo statickou hash?
 //todo: lze '\0' EOF pojmout jako operator s nejvyssi prioritou?
 //todo: unarni operator
 struct op_s {
@@ -83,8 +73,8 @@ printf("ops#%d: \n",opstackp);
 for (i=0; i<opstackp; i++) { printf("'%c'[%d]\n",opstack[i]->op,i);}
 }
 
-void shunt_op (struct op_s *op) {
-  struct op_s *pop;//popped operator
+void shunt_op (up_operator op) {
+  up_operator pop;//popped operator
   int n1, n2;
 printf("%s: '%c' %x\n", __func__, op->op, op->prec);
   switch (op->op) {
@@ -144,7 +134,7 @@ int main (int argc, char *argv[]) {
   int line=1, col=1;
 
   printf("expr=%s\n", expr);
-//lexer
+//primitivni lexer
   for (; *expr; expr++) {
     if (isspace(*expr)) {
      //bile znaky nic, jen hlidame konec radku

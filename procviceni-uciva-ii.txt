@@ -3,3 +3,4 @@
   * [[dox>procviceni-uciva-ii/hledani-nejdelsich-slov.c|Hledání_nejdelších_slov]]
   * [[dox>procviceni-uciva-ii/median-cisel-v-souboru.c|Medián_čísel_v_souboru]]
   * [[.:procviceni-uciva-ii:c2dw.c]]
+  * [[.:procviceni-uciva-ii:]]

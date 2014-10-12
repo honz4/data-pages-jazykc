@@ -1,0 +1,38 @@
+
+
+****** Sbírka_úloh_z_jazyka_C ******
+Celková_koncepce_programu
+[UP Logo]
+Katedra informatiky
+Univerzity Palackého
+v_Olomouci
+
+****** Objemy a povrchy ******
+Téma: Celková koncepce programu
+Procvičované učivo: celková koncepce programu, parametry funkce main, funkce,
+větvení
+Napište v jazyku C program pro výpočet objemu a povrchu válce, pravidelného
+trojbokého, čtyřbokého a šestibokého hranolu. Parametry výpočtu by mělo být
+možné předávat programu při spuštění z příkazové řádky. Zdrojový kód programu
+by měl být rozdělen do 2 modulů. Modul hlavní funkce (soubor main.c) bude
+zajišťovat zpracování a případně načtení chybějící parametrů výpočtu, budou z
+něj volány funkce zajišťující vlastní výpočet a vypisovány vypočítané hodnoty
+na obrazovku. Druhý modul (soubory vypocet.h a vypocet.c) pak bude zajišťovat
+veškeré požadované výpočty. Při řešení úlohy dbejte všech zásad zmíněných na
+přednášce.
+Příklad použití:
+objemy_a_povrchy.exe 0 1.2 2.4 (OS Windows)
+./objemy_a_povrchy 0 1.2 2.4 (OS Linux)
+Příklad výstupu:
+Valec s vyskou 1.2 a polomerem podstavy 2.4
+ma povrch 54.2592 a objem 21.7037.
+Příklad použití:
+objemy_a_povrchy.exe 3 2.3 4.5 (OS Windows)
+./objemy_a_povrchy 3 2.3 4.5 (OS Linux)
+Pravidelny 3-boky hranol s vyskou 2.3 a delkou podstavne hrany 4.5
+ma povrch 48.587 a objem 20.1676.
+Povolené knihovny: stdio.h, stdlib.h, math.h
+===============================================================================
+[Creative_Commons_License] Sbírka_úloh_z_jazyka_C. © Katedra_informatiky
+Univerzity_Palackého_v_Olomouci, 2009.
+Projekt byl vytvořen za podpory grantu FRVŠ 2061/2009/G1.
